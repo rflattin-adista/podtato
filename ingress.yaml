@@ -1,0 +1,39 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: podtato-8
+  namespace: kumba
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - match: Host(`podtato-8.savoye-poc-1.kumba.adista.fr`) && PathPrefix(`/`)
+    kind: Rule
+    services:
+    - name: podtato-head-entry
+      namespace: eleve-8
+      scheme: http
+      port: 9000
+  tls:
+    secretName: kumba-wildcard-certificate-secret
+    domains:
+      - main: "savoye-poc-1.kumba.adista.fr"
+        sans:
+          - "*.savoye-poc-1.kumba.adista.fr"
+
+---
+
+apiVersion: "kumba.adista.fr/v1"
+kind: KumbaMenuItem
+metadata:
+  name: podtato-8
+  namespace: eleve-8
+spec:
+  name: 'PodTato 8'
+  description: "Application de démo PodTato-8."
+  tool: 'PodTato-8'
+  url: ''
+  path: 'podtato-8'
+  color: '#fff'
+  visible: true
+  order: 0
